@@ -34,5 +34,57 @@ export default class HashMap {
     if (this.size / this.capacity > this.loadFactor) {
         // this.resize();
         }
-    }   
+    }
+    
+    get(key) {
+        const index = this.hash(key);
+        const bucket = this.buckets[index];
+      
+        for (let pair of bucket) {
+          if (pair.key === key) return pair.value;
+        }
+      
+        return null;
+    }
+
+    has(key) {
+        return this.get(key) !== null;
+    }
+
+    remove(key) {
+        const index = this.hash(key);
+        const bucket = this.buckets[index];
+      
+        for (let i = 0; i < bucket.length; i++) {
+          if (bucket[i].key === key) {
+            bucket.splice(i, 1);
+            this.size--;
+            return true;
+          }
+        }
+      
+        return false;
+    }
+      
+    length() {
+        return this.size;
+    }
+
+    clear() {
+        this.buckets = new Array(this.capacity).fill(null).map(() => []);
+        this.size = 0;
+    }
+
+    keys() {
+        return this.buckets.flat().map(pair => pair.key);
+    }
+
+    values() {
+        return this.buckets.flat().map(pair => pair.value);
+    }
+      
+    entries() {
+        return this.buckets.flat().map(pair => [pair.key, pair.value]);
+    }
+       
 }
